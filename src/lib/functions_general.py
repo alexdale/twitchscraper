@@ -15,7 +15,7 @@ def pp(message, mtype='INFO'):
 	print '[%s] [%s] %s' % (time.strftime('%H:%M:%S', time.gmtime()), mtype, message)
 
 def ppi(channel, message, username):
-	print '[%s %s] <%s> %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, grn.format(username.lower()), message)
+	print '[%s %s] <%s> %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, username.lower(), message.decode('utf-8'))
 
 def pbot(message, channel=''):
 	if channel: msg = '[%s %s] <%s> %s' % (time.strftime('%H:%M:%S', time.gmtime()), channel, red.format('BOT'), message)

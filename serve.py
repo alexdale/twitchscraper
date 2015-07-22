@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sys import argv
+import sys
 from src.bot import *
 from src.config.config import *
 

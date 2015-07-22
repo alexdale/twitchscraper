@@ -3,6 +3,8 @@ from functions_general import *
 import cron
 import thread
 
+# sys.stdout = open('file.txt', 'w')
+
 class irc:
 	
 	def __init__(self, config):
@@ -28,8 +30,8 @@ class irc:
 	def get_message(self, data):
 		return {
 			'channel': re.findall(r'^:.+\![a-zA-Z0-9_]+@[a-zA-Z0-9_]+.+ PRIVMSG (.*?) :', data)[0],
-			'username': re.findall(r'^:([a-zA-Z0-9_]+)\!', data)[0],
-			'message': re.findall(r'PRIVMSG #[a-zA-Z0-9_]+ :(.+)', data)[0].decode('utf8')
+			'username': re.findall(r'^:([a-zA-Z0-9_]+)\!', data)[0].encode('utf-8'),
+			'message': re.findall(r'PRIVMSG #[a-zA-Z0-9_]+ :(.+)', data)[0]
 		}
 
 	def check_login_status(self, data):
@@ -53,11 +55,13 @@ class irc:
 			pp('Cannot connect to server (%s:%s).' % (self.config['server'], self.config['port']), 'error')
 			sys.exit()
 
-		sock.settimeout(None)
+		sock.settimeout(None)	
 
 		sock.send('USER %s\r\n' % self.config['username'])
 		sock.send('PASS %s\r\n' % self.config['oauth_password'])
 		sock.send('NICK %s\r\n' % self.config['username'])
+
+		
 
 		if self.check_login_status(sock.recv(1024)):
 			pp('Login successful.')
@@ -73,6 +77,7 @@ class irc:
 
 		self.join_channels(self.channels_to_string(self.config['channels']))
 
+		
 
 		return sock
 
@@ -81,7 +86,7 @@ class irc:
 
 	def join_channels(self, channels):
 		pp('Joining channels %s.' % channels)
-		self.sock.send('JOIN %s\r\n' % channels)
+		self.sock.send('JOIN #%s\r\n' % channels)
 		pp('Joined channels.')
 
 	def leave_channels(self, channels):
